@@ -151,9 +151,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pwd
-            ls
-            project/.circleci/scripts/install_config_dep.sh
+            cat /root/project/.circleci/scripts/install_config_dep.sh
+            /root/project/.circleci/scripts/install_config_dep.sh
       - run:
           name: Configure server
           command: |
