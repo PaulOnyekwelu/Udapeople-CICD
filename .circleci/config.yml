@@ -151,7 +151,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            .circleci/scripts/install_config_dep.sh
+            ./scripts/install_config_dep.sh
       - run:
           name: Configure server
           command: |
@@ -163,4 +163,4 @@ workflows:
   default:
     jobs:
       - configure-infrastructure
-      
+
