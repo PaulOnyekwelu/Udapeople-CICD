@@ -146,10 +146,12 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["13:72:9b:fa:e9:24:56:ec:ea:5c:e7:47:9d:71:9a:ea"]
+      - attach_workspace:
+          at: /project/.circleci
       - run:
           name: Install dependencies
           command: |
-            .circleci/scripts/install_config_dep.sh
+            project/.circleci/scripts/install_config_dep.sh
       - run:
           name: Configure server
           command: |
