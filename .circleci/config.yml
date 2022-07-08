@@ -1,8 +1,27 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.10.1
+
 node_docker: &node_docker
   docker:
     - image: circleci/node:13.8.0
+aws_docker: &aws_docker
+  docker:
+    - image: amazon/aws-cli
+
+commands:
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      workflowID:
+        type: string
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            .circleci/scripts/destroy_environment.sh << parameters.workflowID >>
 
 jobs:
   build-frontend:
@@ -62,6 +81,30 @@ jobs:
             cd backend
             npm install
             npm run test
+
+  deploy-infrastructure:
+    <<: *aws_docker
+    steps:
+      - checkout
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            .circleci/scripts/backend_deploy.sh ${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            .circleci/scripts/frontend_deploy.sh ${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            .circleci/scripts/add_ip_to_inventory.sh
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+      - destroy-environment:
+          workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+
 
   scan-frontend:
     <<: *node_docker
