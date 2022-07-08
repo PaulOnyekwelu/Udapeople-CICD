@@ -82,6 +82,34 @@ jobs:
             npm install
             npm run test
 
+  scan-frontend:
+    <<: *node_docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: scan frontend
+          command: |
+            cd frontend
+            npm install
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
+
+  scan-backend:
+    <<: *node_docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: scan backend
+          command: |
+            cd backend
+            npm install
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
+
   deploy-infrastructure:
     <<: *aws_docker
     steps:
@@ -105,34 +133,6 @@ jobs:
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
-
-  scan-frontend:
-    <<: *node_docker
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [frontend-build]
-      - run:
-          name: scan frontend
-          command: |
-            cd frontend
-            npm install
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
-  scan-backend:
-    <<: *node_docker
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend-build]
-      - run:
-          name: scan backend
-          command: |
-            cd backend
-            npm install
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
-
 workflows:
   default:
     jobs:
@@ -146,3 +146,8 @@ workflows:
           requires: [build-frontend]
       # - scan-backend:
       #     requires: [build-backend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend]
+          filters:
+            branches:
+              only: [master]
