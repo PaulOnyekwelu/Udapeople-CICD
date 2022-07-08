@@ -24,6 +24,7 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            cd ~
             .circleci/scripts/destroy_environment.sh << parameters.workflowID >>
 
 jobs:
@@ -152,6 +153,7 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update tar gzip
+            apk --no-cache add sudo
             apk --no-cache add curl
             apk add --update ansible
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -168,20 +170,21 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      # - scan-backend:
+      - configure-infrastructure
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
       #     requires: [build-backend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend]
-          filters:
-            branches:
-              only: [master]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # # - scan-backend:
+      # #     requires: [build-backend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend]
+      #     filters:
+      #       branches:
+      #         only: [master]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
