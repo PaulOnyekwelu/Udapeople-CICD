@@ -121,11 +121,11 @@ jobs:
       - run:
           name: Ensure back-end infrastructure exists
           command: |
-            /root/project/.circleci/scripts/backend_deploy.sh ${CIRCLE_WORKFLOW_ID:0:7}
+            .circleci/scripts/backend_deploy.sh ${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: Ensure front-end infrastructure exist
           command: |
-            /root/project/.circleci/scripts/frontend_deploy.sh ${CIRCLE_WORKFLOW_ID:0:7}
+            .circleci/scripts/frontend_deploy.sh ${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: install tar gzip
           command: |
@@ -133,11 +133,11 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            /root/project/.circleci/scripts/add_ip_to_inventory.sh
+            .circleci/scripts/add_ip_to_inventory.sh
       - persist_to_workspace:
           root: /
           paths:
-            - /root/project/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
