@@ -9,6 +9,9 @@ node_docker: &node_docker
 aws_docker: &aws_docker
   docker:
     - image: amazon/aws-cli
+python_docker: &python_docker
+  docker:
+    - image: python:3.7-alpine3.11
 
 commands:
   destroy-environment:
@@ -137,21 +140,27 @@ jobs:
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
+  configure-infrastructure:
+    <<: *python_docker
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["13:72:9b:fa:e9:24:56:ec:ea:5c:e7:47:9d:71:9a:ea"]
+      - attach_workspace:
+          at: /project/.circleci
+      - run:
+          name: Install dependencies
+          command: |
+            .circleci/scripts/install_config_dep.sh
+      - run:
+          name: Configure server
+          command: |
+            # Your code here
+            exit 0
+      # Here's where you will add some code to rollback on failure
+
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend]
-          filters:
-            branches:
-              only: [master]
+      - configure-infrastructure
+      
