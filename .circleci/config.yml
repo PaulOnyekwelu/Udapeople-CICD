@@ -24,7 +24,12 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            id
+            pwd
+            ls
             cd ~
+            pwd
+            ls
             .circleci/scripts/destroy_environment.sh << parameters.workflowID >>
 
 jobs:
