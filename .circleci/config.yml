@@ -36,6 +36,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+
   test-frontend:
     <<: *node_docker
     steps:
@@ -48,6 +49,7 @@ jobs:
             cd frontend
             npm install
             npm run test
+
   test-backend:
     <<: *node_docker
     steps:
@@ -61,6 +63,31 @@ jobs:
             npm install
             npm run test
 
+  scan-frontend:
+    <<: *node_docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: scan frontend
+          command: |
+            cd frontend
+            npm install
+            npm audit --audit-level=critical
+  scan-backend:
+    <<: *node_docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: scan backend
+          command: |
+            cd backend
+            npm install
+            npm audit --audit-level=critical
+
 workflows:
   default:
     jobs:
@@ -69,4 +96,8 @@ workflows:
       - test-frontend:
           requires: [build-frontend]
       - test-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - scan-backend:
           requires: [build-backend]
