@@ -137,7 +137,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
       - destroy-environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -164,8 +164,9 @@ jobs:
           command: |
             pwd
             ls
+            ls ~/
             ls project/
-            cd /root/project/.circleci/ansible
+            cd project/.circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
