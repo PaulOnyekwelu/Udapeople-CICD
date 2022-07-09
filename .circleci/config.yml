@@ -190,39 +190,22 @@ jobs:
       # Here's where you will add some code to rollback on failure
 
   deploy-frontend:
-    <<: *aws_docker
+    <<: *python_docker
     steps:
-      - run:
-          name: Installing tar
-          command: |
-            yum -y update
-            ym -y install tar gzip
       - checkout
       - attach_workspace:
           at: ~/project
       - run:
-          name: Install Python3
+          name: Install dependencies
           command: |
-            dnf install python3
-            python3 -V
-      - run:
-          name: Install Ansible
-          command: |
-            yum -y install epel-repo
-            yum -y update
-            yum -y install ansible
-      - run:
-          name: install Node and NPM
-          command: |
-            yum install --assumeyes epel-release
-            yum install --assumeyes nodejs
-      - run:
-          name: Install AWS CLI
-          command: | 
-            yum -y install tar gzip
+            apk add --update tar gzip
+            apk --no-cache add sudo
+            apk --no-cache add curl
+            apk add --update ansible
+            apk add --update nodejs npm
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
-            ./aws/install
+            sudo ./aws/install
       - run:
           name: Get backend url
           command: |
