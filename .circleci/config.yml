@@ -294,9 +294,6 @@ jobs:
               --query 'Reservations[].Instances[].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
-      - run:
-          name: Backend smoke test.
-          command: |
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"
@@ -305,6 +302,10 @@ jobs:
             else
               return 1
             fi
+      - run:
+          name: Backend smoke test.
+          command: |
+            echo "${API_URL}/api/status"
       - run:
           name: Frontend smoke test.
           command: |
@@ -316,10 +317,10 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment:
-          workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
-      - revert-migrations:
-          workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - destroy-environment:
+      #     workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - revert-migrations:
+      #     workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
 workflows:
   default:
