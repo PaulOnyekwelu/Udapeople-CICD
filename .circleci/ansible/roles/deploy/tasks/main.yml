@@ -3,16 +3,16 @@
   shell: |
     pwd
     ls -al
-- name: copy project to directory
-  copy:
-    src: ~/project/artifact.tar.gz
-    dest: ~/
-    owner: ubuntu
-    group: ubuntu
+# - name: copy project to directory
+#   copy:
+#     src: ~/project/artifact.tar.gz
+#     dest: ~/
+#     owner: ubuntu
+#     group: ubuntu
 
 - name: extract zip file
   ansible.builtin.unarchive:
-    src:  ~/artifact.tar.gz
+    src:  ~/project/artifact.tar.gz
     dest: ~/
   
 - name: installing dependencies
