@@ -192,12 +192,12 @@ jobs:
   deploy-frontend:
     <<: *aws_docker
     steps:
-      - checkout
       - run:
           name: Installing tar
           command: |
             sudo yum -y update
             sudo ym -y install tar gzip
+      - checkout
       - attach_workspace:
           at: ~/project
       - run:
