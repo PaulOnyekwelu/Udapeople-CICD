@@ -6,13 +6,13 @@
 - name: copy project to directory
   copy:
     src: ~/project/artifact.tar.gz
-    dest: /home/ubuntu/
+    dest: ~/
     owner: ubuntu
     group: ubuntu
 
 - name: extract zip file
   ansible.builtin.unarchive:
-    src:  artifact.tar.gz
+    src:  ~/artifact.tar.gz
     dest: ~/
   
 - name: installing dependencies
