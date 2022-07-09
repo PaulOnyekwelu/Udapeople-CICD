@@ -134,7 +134,7 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            .circleci/scripts/add_ip_to_inventory.sh
+            .circleci/scripts/add_ip_to_inventory.sh ${CIRCLE_WORKFLOW_ID:0:7}
       - persist_to_workspace:
           root: ~/project
           paths:
@@ -245,7 +245,7 @@ jobs:
             npm install
             npm run build
             cd ..
-            tar -C backend/dist -czvf artifact.tar.gz .
+            tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
@@ -266,9 +266,8 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[].Instances[].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople" \
+              --filters "Name=tag:project,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
-            echo "${BACKEND_IP}"
       - run:
           name: Backend smoke test.
           command: |
@@ -307,7 +306,7 @@ workflows:
       - scan-backend:
           requires: [build-backend]
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [master]
