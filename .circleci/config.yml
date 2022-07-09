@@ -196,7 +196,7 @@ jobs:
       - run:
           name: install Node and NPM
           command: |
-            yum install --assumeyes epel-release
+            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install --assumeyes nodejs
       - run:
           name: Get backend url
