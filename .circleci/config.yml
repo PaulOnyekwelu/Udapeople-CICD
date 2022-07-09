@@ -344,8 +344,7 @@ jobs:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
   cleanup:
-    docker:
-      <<: *aws_docker
+    <<: *aws_docker
     steps:
       - checkout
       - run:
