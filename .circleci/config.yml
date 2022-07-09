@@ -190,23 +190,16 @@ jobs:
       # Here's where you will add some code to rollback on failure
 
   deploy-frontend:
-    <<: *python_docker
+    <<: *aws_docker
     steps:
       - checkout
       - attach_workspace:
           at: ~/project
       - run:
-          name: Install dependencies
+          name: install Node and NPM
           command: |
-            apk add --update tar gzip
-            apk --no-cache add sudo
-            apk --no-cache add curl
-            apk add --update ansible
-            apk add --update nodejs npm
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-            which aws
+            yum install --assumeyes epel-release
+            yum install --assumeyes nodejs
       - run:
           name: Get backend url
           command: |
@@ -216,6 +209,8 @@ jobs:
               --output text )
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
