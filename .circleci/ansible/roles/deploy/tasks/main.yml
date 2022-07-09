@@ -1,8 +1,8 @@
 ---
-- name: print default pwd
-  shell: |
-    pwd
-    ls -al
+- name: create backend dir
+  file:
+    path: ~/backend
+    state: directory
 
 - name: extract zip file
   ansible.builtin.unarchive:
