@@ -173,6 +173,8 @@ jobs:
     <<: *node_docker
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
       - run:
           name: Run migrations
           command: |
@@ -193,6 +195,8 @@ jobs:
     <<: *aws_docker
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
       - run:
           name: install Node and NPM
           command: |
