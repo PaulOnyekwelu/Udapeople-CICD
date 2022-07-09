@@ -1,18 +1,13 @@
 ---
-- name: create backend dir
-  file:
-    path: ~/backend
-    state: directory
 
 - name: extract zip file
   ansible.builtin.unarchive:
     src:  ~/project/artifact.tar.gz
-    dest: ~/backend
+    dest: ~/
   
 - name: installing dependencies
   shell: |
     cd ~
-    cd backend
     npm install
 
 - name: restarting pm2 server

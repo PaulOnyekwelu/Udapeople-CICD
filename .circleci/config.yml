@@ -252,15 +252,14 @@ jobs:
       # Here's where you will add some code to rollback on failure
 
   smoke-test:
-    <<: *python_docker
+    <<: *aws_docker
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip
-            apk --no-cache add sudo
-            apk --no-cache add curl
+            yum -y install tar gzip
+            yum -y install curl
       - run:
           name: Get backend url
           command: |
