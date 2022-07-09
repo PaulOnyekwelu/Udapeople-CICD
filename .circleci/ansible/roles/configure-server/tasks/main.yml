@@ -21,7 +21,7 @@
     update_cache: true
 
 - name: install pm2
-  apt:
+  npm:
     name: pm2
     state: latest
     global: yes
