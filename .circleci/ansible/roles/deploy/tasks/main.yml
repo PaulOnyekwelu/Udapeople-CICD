@@ -1,0 +1,27 @@
+---
+- name: print default pwd
+  shell: |
+    pwd
+    ls -al
+- name: copy project to directory
+  copy:
+    src: ~/artifact.tar.gz
+    dest: /home/ubuntu/
+    owner: ubuntu
+    group: ubuntu
+
+- name: extract zip file
+  ansible.builtin.unarchive:
+    src:  artifact.tar.gz
+    dest: ~/
+  
+- name: installing dependencies
+  shell: |
+    cd ~
+    cd backend
+    npm install
+
+- name: restarting pm2 server
+  shell: |
+    pm2 stop default
+    pm2 start npm -- start
