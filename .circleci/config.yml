@@ -193,8 +193,6 @@ jobs:
     <<: *aws_docker
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/project
       - run:
           name: install Node and NPM
           command: |
@@ -203,10 +201,10 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            export BACKEND_IP = $( aws ec2 describe-instances \
+            export BACKEND_IP = $(aws ec2 describe-instances \
               --query 'Reservations[].Instances[].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople" \
-              --output text )
+              --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
