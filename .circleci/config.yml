@@ -173,8 +173,6 @@ jobs:
     <<: *node_docker
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/project
       - run:
           name: Run migrations
           command: |
