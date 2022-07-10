@@ -348,7 +348,7 @@ jobs:
       - persist_to_workspace:
           root: ~/project
           paths:
-            - ~/project/OldWorkflowID.txt
+            - OldWorkflowID.txt
       # - run:
       #     name: Update cloudfront distribution
       #     command: |
@@ -365,17 +365,17 @@ jobs:
   cleanup:
     <<: *aws_docker
     steps:
+      - checkout
       - run:
           name: install tar gzip
           command: |
             yum -y install tar gzip
-      - checkout
       - attach_workspace:
           at: ~/project
       - run:
           name: Get old stack workflow id
           command: |
-            OldWorkflowID=$(cat ~/project/OldWorkflowID.txt)
+            OldWorkflowID=$(cat OldWorkflowID.txt)
             echo "oldWorkSpace: ${OldWorkflowID}"
       - run:
           name: Remove old stacks and files
