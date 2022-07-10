@@ -332,7 +332,7 @@ jobs:
           command: |
             # your code here
       - run:
-          name: Get old stack workflow id
+          name: Get old stack workflow id and store to workspace
           command: |
             # Fetching the Old workflow ID
             export OldWorkflowID=$(aws cloudformation \
@@ -349,18 +349,18 @@ jobs:
           root: ~/project
           paths:
             - ~/OldWorkflowID.txt
-      - run:
-          name: Update cloudfront distribution
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --stack-name InitialStack \
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=udapeople
-      - destroy-environment:
-          workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
-      - revert-migrations:
-          workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - run:
+      #     name: Update cloudfront distribution
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/cloudfront.yml \
+      #         --stack-name InitialStack \
+      #         --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --tags project=udapeople
+      # - destroy-environment:
+      #     workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - revert-migrations:
+      #     workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
 
   cleanup:
     <<: *aws_docker
@@ -398,7 +398,6 @@ jobs:
 workflows:
   default:
     jobs:
-      - cleanup
       # - build-frontend
       # - build-backend
       # - test-frontend:
@@ -424,7 +423,7 @@ workflows:
       #     requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - cloudfront-update:
+          # requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
