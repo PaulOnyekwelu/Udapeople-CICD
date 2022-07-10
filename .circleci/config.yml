@@ -328,9 +328,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: install tar gzip
           command: |
-            # your code here
+            yum -y install tar gzip
       - run:
           name: Get old stack workflow id and store to workspace
           command: |
