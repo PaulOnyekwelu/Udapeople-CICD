@@ -383,7 +383,7 @@ jobs:
             # You can use any condition like:
             # if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             # if [[ "${OldWorkflowID}" =~ "${STACKS[@]}"  ]]
-            OldWorkflowID=$(cat ~/OldWorkflowID.txt)
+            OldWorkflowID=$(cat OldWorkflowID.txt)
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
               echo "---------- cleanup initiated -----------"
