@@ -365,6 +365,10 @@ jobs:
   cleanup:
     <<: *aws_docker
     steps:
+      - run:
+          name: install tar gzip
+          command: |
+            yum -y install tar gzip
       - checkout
       - attach_workspace:
           at: ~/project
