@@ -344,7 +344,7 @@ jobs:
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                     --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"
-            echo "${OldWorkflowID}" > ~/OldWorkflowID.txt
+            echo "${OldWorkflowID}" > ~/project/OldWorkflowID.txt
       - persist_to_workspace:
           root: ~/project
           paths:
