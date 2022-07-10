@@ -229,17 +229,14 @@ jobs:
               --filters "Name=tag:project,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
             echo "${BACKEND_IP}" > frontend/backend.txt
-            echo "${BACKEND_IP}" 
       - run:
           name: Deploy frontend objects
           command: |
             cd frontend
             BACKEND_IP=$(cat backend.txt)
-            cat backend.txt
-            echo "${BACKEND_IP}"
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            echo API_URL="http://${BACKEND_IP}:3030" > frontend/.env
             cat frontend/.env
             npm install
             npm run build
